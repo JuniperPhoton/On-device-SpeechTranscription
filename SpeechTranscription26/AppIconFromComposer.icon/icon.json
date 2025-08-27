@@ -1,0 +1,69 @@
+{
+  "fill" : "system-dark",
+  "groups" : [
+    {
+      "hidden" : false,
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+          },
+          "image-name" : "text.alignleft.png",
+          "name" : "text.alignleft",
+          "position" : {
+            "scale" : 1.3,
+            "translation-in-points" : [
+              148.18237663110517,
+              123.20811076956676
+            ]
+          }
+        },
+        {
+          "blend-mode" : "plus-darker",
+          "fill" : {
+            "solid" : "srgb:0.21961,0.36078,0.64314,1.00000"
+          },
+          "glass" : true,
+          "image-name" : "bubble.fill.png",
+          "name" : "bubble.fill",
+          "position" : {
+            "scale" : 2,
+            "translation-in-points" : [
+              144.484375,
+              149.3984375
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "display-p3:1.00000,1.00000,1.00000,1.00000"
+          },
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "waveform.png",
+          "name" : "waveform",
+          "opacity" : 0.55,
+          "position" : {
+            "scale" : 2,
+            "translation-in-points" : [
+              -88.4765625,
+              -61.375
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}
