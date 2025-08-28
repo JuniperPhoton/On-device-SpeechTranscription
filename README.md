@@ -27,9 +27,7 @@ Open the project with Xcode 26 Beta, and build it as usual.
 
 # Notes
 
-I built this mainly for my own purpose, and I have tested this on my MacBook Pro with M1 Pro on macOS 26 Beta 8.
-
-Some unknown cases:
+I built this mainly for my own purpose, and I have tested this on my MacBook Pro with M1 Pro on macOS 26 Beta 8. Some unknown cases:
 
 - I am not quite sure whether this on-device model requires Apple Intelligence or not. If you have tested this on a MacBook that doesn't support Apple Intelligence, please leave your feedback in the issues section.
 - The exact time when macOS downloads the on-device model is still unknown, and the model may be embedded on the device if it's supported.
