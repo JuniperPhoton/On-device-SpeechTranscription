@@ -19,7 +19,7 @@ Whether you choose to build it yourself or install the pre-built package, you ha
 
 ## Install
 
-
+Navigate to the [Release](https://github.com/JuniperPhoton/SpeechTranscription/releases) section to view the latest releases.
 
 ## Build the project yourself
 
