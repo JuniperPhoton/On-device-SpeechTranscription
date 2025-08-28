@@ -15,6 +15,10 @@ class TranscriptionModel {
     
     private let service: TranscriptionService
     
+    var isAvailable: Bool {
+        type(of: service).isAvailable
+    }
+    
     var isRunningTask: Bool {
         transcriptionTask != nil
     }

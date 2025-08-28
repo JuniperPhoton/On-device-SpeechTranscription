@@ -8,10 +8,29 @@ import Foundation
 import Speech
 
 protocol TranscriptionService {
+    static var isAvailable: Bool { get }
     nonisolated func transcribeInternal(url: URL, locale: Locale) async throws -> String?
 }
 
+class TranscriptionServiceStub: TranscriptionService {
+    static var isAvailable: Bool {
+        false
+    }
+    
+    nonisolated func transcribeInternal(url: URL, locale: Locale) async throws -> String? {
+        throw NSError(
+            domain: "TranscriptionServiceStub",
+            code: -1,
+            userInfo: [NSLocalizedDescriptionKey: "Transcription service is not available."]
+        )
+    }
+}
+
 class TranscriptionServiceImpl: TranscriptionService {
+    static var isAvailable: Bool {
+        SpeechTranscriber.isAvailable
+    }
+    
     nonisolated func transcribeInternal(url: URL, locale: Locale) async throws -> String? {
         _ = url.startAccessingSecurityScopedResource()
         defer {
