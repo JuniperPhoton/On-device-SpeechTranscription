@@ -9,7 +9,7 @@ import Speech
 
 protocol TranscriptionService {
     static var isAvailable: Bool { get }
-    nonisolated func transcribeInternal(url: URL, locale: Locale) async throws -> String?
+    nonisolated func transcribe(url: URL, locale: Locale) async throws -> String?
 }
 
 class TranscriptionServiceStub: TranscriptionService {
@@ -17,7 +17,7 @@ class TranscriptionServiceStub: TranscriptionService {
         false
     }
     
-    nonisolated func transcribeInternal(url: URL, locale: Locale) async throws -> String? {
+    nonisolated func transcribe(url: URL, locale: Locale) async throws -> String? {
         throw NSError(
             domain: "TranscriptionServiceStub",
             code: -1,
@@ -31,7 +31,7 @@ class TranscriptionServiceImpl: TranscriptionService {
         SpeechTranscriber.isAvailable
     }
     
-    nonisolated func transcribeInternal(url: URL, locale: Locale) async throws -> String? {
+    nonisolated func transcribe(url: URL, locale: Locale) async throws -> String? {
         _ = url.startAccessingSecurityScopedResource()
         defer {
             url.stopAccessingSecurityScopedResource()

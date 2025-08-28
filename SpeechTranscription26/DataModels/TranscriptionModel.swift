@@ -64,7 +64,7 @@ class TranscriptionModel {
             
             do {
                 task.status = .inProgress
-                let result = try await service.transcribeInternal(url: task.file, locale: locale) ?? ""
+                let result = try await service.transcribe(url: task.file, locale: locale) ?? ""
                 task.result = result
                 task.status = .success
             } catch {
