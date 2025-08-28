@@ -16,7 +16,7 @@ struct SpeechTranscription26App: App {
     private var lineSpacing: Double = TranscriptionFontStyle.defaultLineSpacing
     
     @State private var filePickerService = FilePickerService()
-    @State private var transcriptionModel = TranscriptionModel(service: TranscriptionServiceStub())
+    @State private var transcriptionModel = TranscriptionModel(service: TranscriptionServiceImpl())
     
     var body: some Scene {
         WindowGroup {
