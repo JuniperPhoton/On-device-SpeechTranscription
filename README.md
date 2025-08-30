@@ -6,11 +6,10 @@ Some key features:
 
 - It uses an on-device model to do the transcription, which is provided by the macOS system.
 - You can select multiple files to transcribe them all at once.
-- It supports Japanese, English, Simplified Chinese, and Traditional Chinese out of the box. You can also modify the code to support more locales.
+- It supports Japanese, English, Simplified Chinese, Traditional Chinese and Cantonese out of the box. You can also modify the code to support more locales. Note that your Mac may haven't downloaded some of the models, and you can manage the downloads via the File -> Settings page.
 - It's built with SwiftUI using Liquid Glass design.
 - For text rendering, it uses a bridged version of `NSTextView` to achieve better performance for long text. Of course, text is selectable and copiable.
 - Font size and line spacing are adjustable via the Transcription menu.
-- Supports downloading locale models in the app settings via File -> Settings page.
 
 ![Snipaste_2025-08-28_15-42-23](https://github.com/user-attachments/assets/5efb2c23-e966-4678-bab9-72ea50cedddd)
 
