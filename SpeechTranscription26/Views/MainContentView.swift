@@ -22,10 +22,26 @@ struct MainContentView: View {
             SideBarView(selectedTaskId: $selectedTaskId)
                 .navigationSplitViewColumnWidth(min: 200, ideal: 250)
         } detail: {
-            if let selectedTaskId, let task = transcriptionModel.getTaskBy(id: selectedTaskId) {
-                TranscriptionTaskDetailView(task: task)
-                    .navigationSplitViewColumnWidth(min: 300, ideal: 400)
-            }
+            VStack {
+                if let selectedTaskId, let task = transcriptionModel.getTaskBy(id: selectedTaskId) {
+                    TranscriptionTaskDetailView(task: task)
+                } else {
+                    Group {
+                        if transcriptionModel.isEmpty {
+                            VStack {
+                                Image(systemName: "document.badge.plus")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 50, height: 50)
+                                    .padding(.bottom)
+                                Text("Pick audio files from the sidebar or drop from other apps to get started.")
+                            }
+                        } else {
+                            Text("Select an audio file to see details.")
+                        }
+                    }.padding()
+                }
+            }.navigationSplitViewColumnWidth(min: 300, ideal: 400)
         }.toolbar {
             toolbarItems
         }.navigationTitle("Speech Transcription")
