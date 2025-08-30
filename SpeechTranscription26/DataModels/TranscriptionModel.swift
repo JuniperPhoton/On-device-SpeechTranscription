@@ -49,45 +49,25 @@ class TranscriptionModel {
         if transcriptionTask != nil {
             cancel()
         } else {
+            let pendingTasks = tasks.filter({ $0.status == .pending || $0.status == .failure || $0.status == .cancelled })
+            if pendingTasks.isEmpty {
+                return
+            }
+            
             transcriptionTask = Task {
                 defer {
                     transcriptionTask = nil
                 }
-                await transcribeAudioFile(locale: locale)
+                await transcribeAudioFile(locale: locale, tasks: tasks)
             }
         }
     }
     
-    private func transcribeAudioFile(locale: AppLocale) async {
+    private func transcribeAudioFile(locale: AppLocale, tasks: [TranscriptionTask]) async {
         await withTaskGroup { group in
-            for task in tasks.filter({ $0.status == .pending || $0.status == .failure || $0.status == .cancelled }) {
+            for task in tasks {
                 _ = group.addTaskUnlessCancelled { @MainActor in
-                    do {
-                        task.result = nil
-                        task.status = .inProgress
-                        let results = try await self.service.transcribeStream(url: task.file, locale: locale)
-                        
-                        for try await result in results {
-                            if Task.isCancelled {
-                                throw CancellationError()
-                            }
-                            task.result = (task.result ?? "") + result + "\n"
-                        }
-                        
-                        if Task.isCancelled {
-                            throw CancellationError()
-                        }
-                        
-                        task.result = task.result?.trimmingCharacters(in: .whitespacesAndNewlines)
-                        task.status = .success
-                    } catch is CancellationError {
-                        task.status = .cancelled
-                        task.result = task.result?.trimmingCharacters(in: .whitespacesAndNewlines)
-                    } catch {
-                        task.result = nil
-                        task.status = .failure
-                        AppLogger.defaultLogger.warning("Transcription failed: \(error)")
-                    }
+                    await self.transcribe(task: task, locale: locale)
                 }
             }
         }
@@ -101,5 +81,34 @@ class TranscriptionModel {
     func cancel() {
         transcriptionTask?.cancel()
         transcriptionTask = nil
+    }
+    
+    private func transcribe(task: TranscriptionTask, locale: AppLocale) async {
+        do {
+            task.result = nil
+            task.status = .inProgress
+            let results = try await self.service.transcribeStream(url: task.file, locale: locale)
+            
+            for try await result in results {
+                if Task.isCancelled {
+                    throw CancellationError()
+                }
+                task.result = (task.result ?? "") + result + "\n"
+            }
+            
+            if Task.isCancelled {
+                throw CancellationError()
+            }
+            
+            task.result = task.result?.trimmingCharacters(in: .whitespacesAndNewlines)
+            task.status = .success
+        } catch is CancellationError {
+            task.status = .cancelled
+            task.result = task.result?.trimmingCharacters(in: .whitespacesAndNewlines)
+        } catch {
+            task.result = nil
+            task.status = .failure
+            AppLogger.defaultLogger.warning("Transcription failed: \(error)")
+        }
     }
 }
