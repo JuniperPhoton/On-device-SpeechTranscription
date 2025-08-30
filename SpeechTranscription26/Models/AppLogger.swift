@@ -7,5 +7,5 @@
 import OSLog
 
 class AppLogger {
-    static let defaultLogger = Logger(subsystem: "com.juniperphoton.speechtranscription", category: "default")
+    nonisolated static let defaultLogger = Logger(subsystem: "com.juniperphoton.speechtranscription", category: "default")
 }

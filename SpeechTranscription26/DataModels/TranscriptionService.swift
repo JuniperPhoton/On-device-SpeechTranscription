@@ -5,11 +5,14 @@
 //  Created by juniperphoton on 8/28/25.
 //
 import Foundation
+import OSLog
 import Speech
 
 protocol TranscriptionService {
+    associatedtype AsyncSequenceType: AsyncSequence<String, any Error>
     static var isAvailable: Bool { get }
     nonisolated func transcribe(url: URL, locale: AppLocale) async throws -> String?
+    nonisolated func transcribeStream(url: URL, locale: AppLocale) async throws -> AsyncSequenceType
 }
 
 class TranscriptionServiceStub: TranscriptionService {
@@ -18,6 +21,14 @@ class TranscriptionServiceStub: TranscriptionService {
     }
     
     nonisolated func transcribe(url: URL, locale: AppLocale) async throws -> String? {
+        throw NSError(
+            domain: "TranscriptionServiceStub",
+            code: -1,
+            userInfo: [NSLocalizedDescriptionKey: "Transcription service is not available."]
+        )
+    }
+    
+    nonisolated func transcribeStream(url: URL, locale: AppLocale) async throws -> AsyncThrowingStream<String, any Error> {
         throw NSError(
             domain: "TranscriptionServiceStub",
             code: -1,
@@ -37,22 +48,49 @@ class TranscriptionServiceImpl: TranscriptionService {
             url.stopAccessingSecurityScopedResource()
         }
         
-        let transcriber = SpeechTranscriber(locale: .init(identifier: locale.identifier), preset: .transcription)
-        async let transcriptionFuture = try transcriber.results.reduce("") { partialResult, result in
-            partialResult + result.text + "\n"
-        }
+        let transcriber = SpeechTranscriber(
+            locale: Locale(identifier: locale.identifier),
+            preset: .transcription
+        )
         
         let analyzer = SpeechAnalyzer(modules: [transcriber])
-        if let lastSample = try await analyzer.analyzeSequence(from: .init(forReading: url)) {
-            try await analyzer.finalizeAndFinish(through: lastSample)
-        } else {
-            await analyzer.cancelAndFinishNow()
+        try await analyzer.start(inputAudioFile: .init(forReading: url), finishAfterFile: true)
+        
+        var resultString: AttributedString = ""
+        
+        do {
+            for try await transcription in transcriber.results.filter({ $0.isFinal }) {
+                resultString = resultString + transcription.text + "\n"
+            }
+        } catch {
+            AppLogger.defaultLogger.log("Transcription error: \(error)")
         }
         
-        let result = try await transcriptionFuture
-        let maps = result.characters.flatMap { String($0.utf8) }
-        return maps.reduce("") { partialResult, c in
+        return resultString.characters.flatMap { String($0.utf8) }.reduce("") { partialResult, c in
             partialResult + String(c)
         }.trimmingCharacters(in: .newlines)
+    }
+    
+    nonisolated func transcribeStream(url: URL, locale: AppLocale) async throws -> some AsyncSequence<String, any Error> {
+        _ = url.startAccessingSecurityScopedResource()
+        defer {
+            url.stopAccessingSecurityScopedResource()
+        }
+        
+        let transcriber = SpeechTranscriber(
+            locale: Locale(identifier: locale.identifier),
+            transcriptionOptions: [],
+            reportingOptions: [.volatileResults],
+            attributeOptions: []
+        )
+        
+        let analyzer = SpeechAnalyzer(modules: [transcriber])
+        try await analyzer.start(inputAudioFile: .init(forReading: url), finishAfterFile: true)
+        
+        return transcriber.results.filter { $0.isFinal }.map { result in
+            result.text.characters.flatMap { String($0.utf8) }.reduce("") { partialResult, c in
+                partialResult + String(c)
+            }
+        }
     }
 }

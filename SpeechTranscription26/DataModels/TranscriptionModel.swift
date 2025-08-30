@@ -50,22 +50,41 @@ class TranscriptionModel {
             cancel()
         } else {
             transcriptionTask = Task {
+                defer {
+                    transcriptionTask = nil
+                }
                 await transcribeAudioFile(locale: locale)
-                transcriptionTask = nil
             }
         }
     }
     
     private func transcribeAudioFile(locale: AppLocale) async {
         await withTaskGroup { group in
-            for task in tasks.filter({ $0.status == .pending || $0.status == .failure }) {
+            for task in tasks.filter({ $0.status == .pending || $0.status == .failure || $0.status == .cancelled }) {
                 _ = group.addTaskUnlessCancelled { @MainActor in
                     do {
+                        task.result = nil
                         task.status = .inProgress
-                        let result = try await self.service.transcribe(url: task.file, locale: locale) ?? ""
-                        task.result = result
+                        let results = try await self.service.transcribeStream(url: task.file, locale: locale)
+                        
+                        for try await result in results {
+                            if Task.isCancelled {
+                                throw CancellationError()
+                            }
+                            task.result = (task.result ?? "") + result + "\n"
+                        }
+                        
+                        if Task.isCancelled {
+                            throw CancellationError()
+                        }
+                        
+                        task.result = task.result?.trimmingCharacters(in: .whitespacesAndNewlines)
                         task.status = .success
+                    } catch is CancellationError {
+                        task.status = .cancelled
+                        task.result = task.result?.trimmingCharacters(in: .whitespacesAndNewlines)
                     } catch {
+                        task.result = nil
                         task.status = .failure
                         AppLogger.defaultLogger.warning("Transcription failed: \(error)")
                     }
