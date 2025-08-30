@@ -79,9 +79,7 @@ class TranscriptionServiceImpl: TranscriptionService {
         
         let transcriber = SpeechTranscriber(
             locale: Locale(identifier: locale.identifier),
-            transcriptionOptions: [],
-            reportingOptions: [.volatileResults],
-            attributeOptions: []
+            preset: .transcription
         )
         
         let analyzer = SpeechAnalyzer(modules: [transcriber])
