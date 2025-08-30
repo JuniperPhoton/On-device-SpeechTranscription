@@ -10,6 +10,7 @@ Some key features:
 - It's built with SwiftUI using Liquid Glass design.
 - For text rendering, it uses a bridged version of `NSTextView` to achieve better performance for long text. Of course, text is selectable and copiable.
 - Font size and line spacing are adjustable via the Transcription menu.
+- Supports downloading locale models in the app settings via File -> Settings page.
 
 ![Snipaste_2025-08-28_15-42-23](https://github.com/user-attachments/assets/5efb2c23-e966-4678-bab9-72ea50cedddd)
 
@@ -30,7 +31,6 @@ Open the project with Xcode 26 Beta, and build it as usual.
 I built this mainly for my own purpose, and I have tested this on my MacBook Pro with M1 Pro on macOS 26 Beta 8. Some unknown cases:
 
 - I am not quite sure whether this on-device model requires Apple Intelligence or not. If you have tested this on a MacBook that doesn't support Apple Intelligence, please leave your feedback in the issues section.
-- The exact time when macOS downloads the on-device model is still unknown, and the model may be embedded on the device if it's supported.
 
 # MIT License
 
