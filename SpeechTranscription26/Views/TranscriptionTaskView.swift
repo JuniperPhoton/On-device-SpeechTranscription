@@ -52,7 +52,7 @@ struct TranscriptionTaskDetailView: View {
                     text: result,
                     style: .init(
                         fontStyle: .init(
-                            font: .systemFont(ofSize: fontSize),
+                            font: .messageFont(ofSize: fontSize),
                             lineSpacing: lineSpacing
                         ),
                         behaviorStyle: .init(autoScrollToBottom: false)
