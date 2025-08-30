@@ -14,7 +14,7 @@ class TranscriptionModel {
     private(set) var tasks: [TranscriptionTask] = []
     private(set) var transcriptionTask: Task<Void, Never>? = nil
     
-    private let service: TranscriptionService
+    private let service: any TranscriptionService
     
     var isAvailable: Bool {
         type(of: service).isAvailable
@@ -28,7 +28,7 @@ class TranscriptionModel {
         tasks.isEmpty
     }
     
-    init(service: TranscriptionService) {
+    init(service: any TranscriptionService) {
         self.service = service
     }
     
