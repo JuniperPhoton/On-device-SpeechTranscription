@@ -21,12 +21,10 @@ struct SideBarView: View {
                             selectedTaskId = task.id
                         }
                     } label: {
-                        TranscriptionTaskItemView(task: task)
-                            .foregroundStyle(selectedTaskId == task.id ? .white : .primary)
-                            .glassyButtonLabel(
-                                tintColor: selectedTaskId == task.id ? Color.accentColor : nil,
-                                shape: RoundedRectangle(cornerRadius: 12)
-                            )
+                        TranscriptionTaskItemView(
+                            task: task,
+                            isSelected: selectedTaskId == task.id
+                        )
                     }.buttonStyle(.plain)
                 }
             }.padding([.horizontal, .bottom])

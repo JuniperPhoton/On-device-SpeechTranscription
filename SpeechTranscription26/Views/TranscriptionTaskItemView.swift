@@ -8,6 +8,7 @@ import SwiftUI
 
 struct TranscriptionTaskItemView: View {
     var task: TranscriptionTask
+    var isSelected: Bool
     
     var body: some View {
         VStack {
@@ -30,6 +31,12 @@ struct TranscriptionTaskItemView: View {
             }.geometryGroup()
         }
         .frame(maxWidth: .infinity)
+        .foregroundStyle(isSelected ? .white : .primary)
+        .glassyButtonLabel(
+            tintColor: isSelected ? Color.accentColor : nil,
+            shape: RoundedRectangle(cornerRadius: 12)
+        )
         .animation(.default, value: task.status)
+        .animation(.default, value: isSelected)
     }
 }
