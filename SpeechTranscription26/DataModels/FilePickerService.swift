@@ -9,4 +9,5 @@ import SwiftUI
 @Observable
 class FilePickerService {
     var showFilePicker = false
+    var isDroppingFiles = false
 }

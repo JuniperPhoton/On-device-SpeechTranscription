@@ -1,4 +1,3 @@
-//
 //  ContentView.swift
 //  SpeechTranscription26
 //
@@ -6,7 +5,6 @@
 //
 import SwiftUI
 import UniformTypeIdentifiers
-import Speech
 
 struct MainContentView: View {
     @Environment(FilePickerService.self) private var filePickerService
@@ -23,13 +21,6 @@ struct MainContentView: View {
         NavigationSplitView {
             SideBarView(selectedTaskId: $selectedTaskId)
                 .navigationSplitViewColumnWidth(min: 200, ideal: 250)
-                .navigationTitle("Speech Transcription")
-#if os(iOS)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    toolbarItems
-                }
-#endif
         } detail: {
             if let selectedTaskId, let task = transcriptionModel.getTaskBy(id: selectedTaskId) {
                 TranscriptionTaskDetailView(task: task)
@@ -38,6 +29,7 @@ struct MainContentView: View {
         }.toolbar {
             toolbarItems
         }.navigationTitle("Speech Transcription")
+            .onDrop(of: [.audio], isTargeted: $service.isDroppingFiles.animation(), perform: onDroppedFiles)
             .fileImporter(
                 isPresented: $service.showFilePicker,
                 allowedContentTypes: [.audio],
@@ -46,22 +38,17 @@ struct MainContentView: View {
                 guard let urls = try? result.get() else { return }
                 onPickedFiles(urls: urls)
             }
+            .overlay {
+                if service.isDroppingFiles {
+                    FilesDroppingHintView()
+                }
+            }
     }
     
     @ToolbarContentBuilder
     private var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .automatic) {
-            HStack {
-#if os(macOS)
-                localePicker
-#else
-                Menu {
-                    localePicker
-                } label: {
-                    Image(systemName: "globe")
-                }
-#endif
-            }
+            LocalePicker()
         }
         
         ToolbarItem(placement: .primaryAction) {
@@ -83,34 +70,23 @@ struct MainContentView: View {
         }
     }
     
-    private var localePicker: some View {
-        LocalePicker()
-    }
-    
     private func onPickedFiles(urls: [URL]) {
         withAnimation {
             transcriptionModel.addTasks(urls: urls)
         }
     }
-}
-
-private struct ToolbarDivider: View {
-    var body: some View {
-#if os(iOS)
-        Divider()
-#else
-        EmptyView()
-#endif
-    }
-}
-
-extension View {
-    func glassyButtonLabel(tintColor: Color? = nil, shape: some Shape = Capsule()) -> some View {
-        self.labelStyle(.titleAndIcon)
-            .padding(12)
-            .frame(maxWidth: .infinity)
-            .contentShape(Capsule())
-            .glassEffect(.regular.interactive().tint(tintColor), in: shape)
+    
+    private func onDroppedFiles(providers: [NSItemProvider]) -> Bool {
+        Task {
+            var files = [URL]()
+            for provider in providers {
+                if let url = await provider.tryLoadAsAudioFileRepresentation() {
+                    files.append(url)
+                }
+            }
+            onPickedFiles(urls: files)
+        }
+        return true
     }
 }
 
