@@ -58,7 +58,7 @@ class TranscriptionModel {
     
     private func transcribeAudioFile(locale: Locale) async {
         await withTaskGroup { group in
-            for task in tasks {
+            for task in tasks.filter({ $0.status == .pending || $0.status == .failure }) {
                 _ = group.addTaskUnlessCancelled { @MainActor in
                     do {
                         task.status = .inProgress
