@@ -11,6 +11,7 @@ enum TranscriptionStatus: Hashable, CaseIterable {
     case inProgress
     case success
     case failure
+    case cancelled
 }
 
 extension TranscriptionStatus {
@@ -23,7 +24,9 @@ extension TranscriptionStatus {
         case .success:
             return .accent.opacity(0.2)
         case .failure:
-            return .yellow
+            return .red.opacity(0.2)
+        case .cancelled:
+            return .yellow.opacity(0.2)
         }
     }
 }

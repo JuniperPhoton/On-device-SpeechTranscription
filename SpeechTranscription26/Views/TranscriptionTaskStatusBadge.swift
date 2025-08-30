@@ -22,11 +22,13 @@ struct TranscriptionTaskStatusBadge: View {
                     Text("Done")
                 case .failure:
                     Text("Failure")
+                case .cancelled:
+                    Text("Cancelled")
                 }
             }
-        }.padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .font(.body.bold())
+        }.padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .font(.footnote.bold())
             .glassEffect(.regular.tint(status.color), in: Capsule())
     }
 }

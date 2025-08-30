@@ -89,6 +89,9 @@ struct MainContentView: View {
     private func onPickedFiles(urls: [URL]) {
         withAnimation {
             transcriptionModel.addTasks(urls: urls)
+            if self.selectedTaskId == nil {
+                self.selectedTaskId = transcriptionModel.tasks.first?.id
+            }
         }
     }
     

@@ -24,7 +24,7 @@ struct TranscriptionTaskDetailView: View {
                 Text("\(task.file.lastPathComponent)")
                     .font(.title3.bold())
                 
-                TranscriptionTaskStatusBadge(status: task.status, including: [.failure, .inProgress, .pending])
+                TranscriptionTaskStatusBadge(status: task.status, including: [.failure, .inProgress, .pending, .cancelled])
                 
                 Spacer()
                 
