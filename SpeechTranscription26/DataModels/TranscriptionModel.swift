@@ -8,6 +8,7 @@ import SwiftUI
 import Speech
 import OSLog
 
+@MainActor
 @Observable
 class TranscriptionModel {
     private(set) var tasks: [TranscriptionTask] = []
@@ -56,20 +57,19 @@ class TranscriptionModel {
     }
     
     private func transcribeAudioFile(locale: Locale) async {
-        for task in tasks {
-            if Task.isCancelled {
-                AppLogger.defaultLogger.warning("Transcription task was cancelled.")
-                break
-            }
-            
-            do {
-                task.status = .inProgress
-                let result = try await service.transcribe(url: task.file, locale: locale) ?? ""
-                task.result = result
-                task.status = .success
-            } catch {
-                task.status = .failure
-                AppLogger.defaultLogger.warning("Transcription failed: \(error)")
+        await withTaskGroup { group in
+            for task in tasks {
+                _ = group.addTaskUnlessCancelled { @MainActor in
+                    do {
+                        task.status = .inProgress
+                        let result = try await self.service.transcribe(url: task.file, locale: locale) ?? ""
+                        task.result = result
+                        task.status = .success
+                    } catch {
+                        task.status = .failure
+                        AppLogger.defaultLogger.warning("Transcription failed: \(error)")
+                    }
+                }
             }
         }
     }
