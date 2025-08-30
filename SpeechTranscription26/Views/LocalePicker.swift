@@ -7,19 +7,44 @@
 import SwiftUI
 
 struct LocalePicker: View {
+    @Environment(AppLocalesModel.self) private var localesModel
+    @Environment(\.openSettings) private var openSettings
+    
     @AppStorage(AppStorageKeys.locale.rawValue)
     private var locale: AppLocale = .english
     
-    @State private var locales: [AppLocale] = []
-    
     var body: some View {
-        Picker("Locale", selection: $locale) {
-            ForEach(locales, id: \.self) { locale in
-                Text(locale.rawValue)
-                    .tag(locale)
+        Menu {
+            ForEach(localesModel.localeItems.map { $0.locale }, id: \.self) { locale in
+                Button {
+                    withAnimation {
+                        self.locale = locale
+                    }
+                } label: {
+                    Text(locale.rawValue)
+                    if locale == self.locale {
+                        Image(systemName: "checkmark")
+                    }
+                }
             }
-        }.task {
-            locales = await AppLocale.getSupportedLocales()
+            
+            Divider()
+            
+            manageLocalesButton
+        } label: {
+            Label("\(locale.rawValue)", systemImage: "globe")
+                .labelStyle(.titleAndIcon)
+                .contentShape(Rectangle())
+                .glassEffect(.regular)
+                .fixedSize(horizontal: true, vertical: false)
+        }.menuOrder(.fixed)
+    }
+    
+    private var manageLocalesButton: some View {
+        Button {
+            openSettings()
+        } label: {
+            Label("Manage Locales", systemImage: "arrow.down.circle")
         }
     }
 }
