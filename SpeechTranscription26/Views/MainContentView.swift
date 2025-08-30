@@ -13,7 +13,7 @@ struct MainContentView: View {
     @State private var selectedTaskId: String? = nil
     
     @AppStorage(AppStorageKeys.locale.rawValue)
-    private var locale: Locale = .english
+    private var locale: AppLocale = .english
     
     var body: some View {
         @Bindable var service = filePickerService

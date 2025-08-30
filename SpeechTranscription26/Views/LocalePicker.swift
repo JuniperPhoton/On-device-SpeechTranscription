@@ -8,14 +8,18 @@ import SwiftUI
 
 struct LocalePicker: View {
     @AppStorage(AppStorageKeys.locale.rawValue)
-    private var locale: Locale = .english
+    private var locale: AppLocale = .english
+    
+    @State private var locales: [AppLocale] = []
     
     var body: some View {
         Picker("Locale", selection: $locale) {
-            ForEach(Locale.allCases, id: \.self) { locale in
+            ForEach(locales, id: \.self) { locale in
                 Text(locale.rawValue)
                     .tag(locale)
             }
+        }.task {
+            locales = await AppLocale.getSupportedLocales()
         }
     }
 }

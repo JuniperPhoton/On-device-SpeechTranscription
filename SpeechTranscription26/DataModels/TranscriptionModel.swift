@@ -45,7 +45,7 @@ class TranscriptionModel {
         }
     }
     
-    func startTranscribing(locale: Locale) {
+    func startTranscribing(locale: AppLocale) {
         if transcriptionTask != nil {
             cancel()
         } else {
@@ -56,7 +56,7 @@ class TranscriptionModel {
         }
     }
     
-    private func transcribeAudioFile(locale: Locale) async {
+    private func transcribeAudioFile(locale: AppLocale) async {
         await withTaskGroup { group in
             for task in tasks.filter({ $0.status == .pending || $0.status == .failure }) {
                 _ = group.addTaskUnlessCancelled { @MainActor in
