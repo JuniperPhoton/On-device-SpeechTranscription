@@ -21,7 +21,7 @@ struct TranscriptionTaskDetailView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("\(task.file.lastPathComponent)")
+                Text("\(task.displayName)")
                     .font(.title3.bold())
                 
                 TranscriptionTaskStatusBadge(status: task.status, including: [.failure, .inProgress, .pending, .cancelled])

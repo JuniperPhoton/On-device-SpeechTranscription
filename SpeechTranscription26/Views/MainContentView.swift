@@ -11,7 +11,8 @@ struct MainContentView: View {
     @Environment(TranscriptionModel.self) private var transcriptionModel
     
     @State private var selectedTaskId: String? = nil
-    
+    @State private var itemProviderLoader: NSItemProviderLoader? = nil
+
     @AppStorage(AppStorageKeys.locale.rawValue)
     private var locale: AppLocale = .english
     
@@ -34,7 +35,7 @@ struct MainContentView: View {
                                     .scaledToFit()
                                     .frame(width: 50, height: 50)
                                     .padding(.bottom)
-                                Text("Pick audio files from the sidebar or drop from other apps to get started.")
+                                Text("Pick audio files / folders from the sidebar or drop from other apps to get started.")
                             }
                         } else {
                             Text("Select an audio file to see details.")
@@ -45,10 +46,10 @@ struct MainContentView: View {
         }.toolbar {
             toolbarItems
         }.navigationTitle("Speech Transcription")
-            .onDrop(of: [.audio], isTargeted: $service.isDroppingFiles.animation(), perform: onDroppedFiles)
+            .onDrop(of: [.audio, .folder], isTargeted: $service.isDroppingFiles.animation(), perform: onDroppedFiles)
             .fileImporter(
                 isPresented: $service.showFilePicker,
-                allowedContentTypes: [.audio],
+                allowedContentTypes: [.audio, .folder],
                 allowsMultipleSelection: true
             ) { result in
                 guard let urls = try? result.get() else { return }
@@ -87,6 +88,8 @@ struct MainContentView: View {
     }
     
     private func onPickedFiles(urls: [URL]) {
+        guard !urls.isEmpty else { return }
+        
         withAnimation {
             transcriptionModel.addTasks(urls: urls)
             if self.selectedTaskId == nil {
@@ -96,15 +99,11 @@ struct MainContentView: View {
     }
     
     private func onDroppedFiles(providers: [NSItemProvider]) -> Bool {
-        Task {
-            var files = [URL]()
-            for provider in providers {
-                if let url = await provider.tryLoadAsAudioFileRepresentation() {
-                    files.append(url)
-                }
-            }
-            onPickedFiles(urls: files)
+        let loader = NSItemProviderLoader(queue: .main) { urls in
+            onPickedFiles(urls: urls)
         }
+        loader.loadItems(providers: providers)
+        self.itemProviderLoader = loader
         return true
     }
 }

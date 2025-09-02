@@ -14,39 +14,26 @@ enum TranscriptionStatus: Hashable, CaseIterable {
     case cancelled
 }
 
-extension TranscriptionStatus {
-    var color: Color {
-        switch self {
-        case .pending:
-            return .gray.opacity(0.1)
-        case .inProgress:
-            return .clear
-        case .success:
-            return .accent.opacity(0.2)
-        case .failure:
-            return .red.opacity(0.2)
-        case .cancelled:
-            return .yellow.opacity(0.2)
-        }
-    }
-}
-
 @Observable
 class TranscriptionTask: Identifiable, Hashable {
     static func == (lhs: TranscriptionTask, rhs: TranscriptionTask) -> Bool {
         lhs.id == rhs.id
     }
     
-    var file: URL
+    var source: TranscriptionTaskSource
     var result: String?
     var status: TranscriptionStatus = .pending
     
     var id: String {
-        file.absoluteString
+        source.fileURL.absoluteString
     }
     
-    init(file: URL, result: String? = nil) {
-        self.file = file
+    var displayName: String {
+        source.fileURL.lastPathComponent
+    }
+    
+    init(source: TranscriptionTaskSource, result: String? = nil) {
+        self.source = source
         self.result = result
     }
     

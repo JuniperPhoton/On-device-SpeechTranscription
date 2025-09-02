@@ -24,7 +24,7 @@ struct TranscriptionTaskItemView: View {
                     }
                 }.frame(width: 24, height: 24)
                 
-                Text("\(task.file.lastPathComponent)")
+                Text("\(task.displayName)")
                     .lineLimit(3)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
