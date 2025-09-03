@@ -46,7 +46,7 @@ struct MainContentView: View {
         }.toolbar {
             toolbarItems
         }.navigationTitle("Speech Transcription")
-            .onDrop(of: [.audio, .folder], isTargeted: $service.isDroppingFiles.animation(), perform: onDroppedFiles)
+            .onDrop(of: [.audio], isTargeted: $service.isDroppingFiles.animation(), perform: onDroppedFiles)
             .fileImporter(
                 isPresented: $service.showFilePicker,
                 allowedContentTypes: [.audio, .folder],

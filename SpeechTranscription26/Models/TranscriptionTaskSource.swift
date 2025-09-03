@@ -24,6 +24,10 @@ struct TranscriptionTaskSource: Identifiable, Equatable {
     
     @inlinable
     nonisolated func accessing<T>(action: @escaping (URL) async throws -> T) async throws -> T {
+        _ = referencingSourceURL.startAccessingSecurityScopedResource()
+        defer {
+            referencingSourceURL.stopAccessingSecurityScopedResource()
+        }
         return try await action(fileURL)
     }
 }
