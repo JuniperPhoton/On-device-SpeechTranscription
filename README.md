@@ -1,12 +1,12 @@
 # On-device Speech Transcription for macOS 26
 
-This app leverages the new `SpeechAnalyzer` API from the Speech framework introduced in macOS 26 this year.
+This app leverages the new `SpeechAnalyzer` API from the [Speech framework](https://developer.apple.com/documentation/speech/bringing-advanced-speech-to-text-capabilities-to-your-app?changes=_1) introduced in macOS 26 this year.
 
 Some key features:
 
 - It uses an on-device model to do the transcription, which is provided by the macOS system.
 - You can select multiple files to transcribe them all at once.
-- It supports Japanese, English, Simplified Chinese, Traditional Chinese and Cantonese out of the box. You can also modify the code to support more locales. Note that your Mac may haven't downloaded some of the models, and you can manage the downloads via the File -> Settings page.
+- It supports Japanese, English, Simplified Chinese, Traditional Chinese, and Cantonese out of the box. You can also modify the code to support more locales. Note that your Mac may not have downloaded some of the models, and you can manage the downloads via the SpeechTranscription26 -> Settings page.
 - It's built with SwiftUI using Liquid Glass design.
 - For text rendering, it uses a bridged version of `NSTextView` to achieve better performance for long text. Of course, text is selectable and copiable.
 - Font size and line spacing are adjustable via the Transcription menu.
