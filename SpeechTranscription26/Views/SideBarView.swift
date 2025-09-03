@@ -26,6 +26,21 @@ struct SideBarView: View {
                             isSelected: selectedTaskId == task.id
                         )
                     }.buttonStyle(.plain)
+                        .contextMenu {
+                            Button {
+                                openInFinder(task: task)
+                            } label: {
+                                Label("Open in Finder", systemImage: "arrow.up.right")
+                            }
+                            
+                            Divider()
+                            
+                            Button(role: .destructive) {
+                                transcriptionModel.removeTask(of: task.id)
+                            } label: {
+                                Label("Remove from list", systemImage: "trash")
+                            }.disabled(task.status == .inProgress)
+                        }
                 }
             }.padding([.horizontal, .bottom])
         }.safeAreaInset(edge: .top) {
@@ -54,6 +69,11 @@ struct SideBarView: View {
                     }.buttonStyle(.plain)
                 }
             }.buttonStyle(.glass).padding(.horizontal)
-        }
+        }.animation(.default, value: transcriptionModel.tasks.count)
+    }
+    
+    private func openInFinder(task: TranscriptionTask) {
+        let fileURL = task.source.fileURL
+        NSWorkspace.shared.activateFileViewerSelecting([fileURL])
     }
 }

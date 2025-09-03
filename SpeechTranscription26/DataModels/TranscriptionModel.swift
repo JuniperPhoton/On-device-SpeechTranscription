@@ -36,6 +36,10 @@ class TranscriptionModel {
         tasks.first(where: { $0.id == id })
     }
     
+    func removeTask(of id: String) {
+        tasks.removeAll(where: { $0.id == id })
+    }
+    
     func addTasks(urls: [URL]) {
         for url in urls {
             if isFolder(url: url) {
