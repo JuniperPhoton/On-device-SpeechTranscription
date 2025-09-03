@@ -49,7 +49,8 @@ struct SideBarView: View {
                     filePickerService.showFilePicker = true
                 } label: {
                     Label("Pick Audio Files / Folder", systemImage: "document.badge.plus")
-                        .glassyButtonLabel()
+                        .foregroundStyle(transcriptionModel.tasks.isEmpty ? .white : .primary)
+                        .glassyButtonLabel(tintColor: transcriptionModel.tasks.isEmpty ? .accent : nil)
                 }
                 .buttonStyle(.plain)
                 
