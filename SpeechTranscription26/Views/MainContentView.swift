@@ -5,11 +5,13 @@
 //
 import SwiftUI
 import UniformTypeIdentifiers
+internal import PhotonUtility
 
 struct MainContentView: View {
     @Environment(FilePickerService.self) private var filePickerService
     @Environment(TranscriptionModel.self) private var transcriptionModel
-    
+    @Environment(AppLocalesModel.self) private var localesModel
+
     @State private var selectedTaskId: String? = nil
     @State private var itemProviderLoader: NSItemProviderLoader? = nil
 
@@ -65,11 +67,13 @@ struct MainContentView: View {
     @ToolbarContentBuilder
     private var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .automatic) {
-            LocalePicker()
+            if !localesModel.loading {
+                LocalePicker()
+            }
         }
         
         ToolbarItem(placement: .primaryAction) {
-            if !transcriptionModel.tasks.isEmpty {
+            if !localesModel.loading && !transcriptionModel.tasks.isEmpty {
                 Button {
                     transcriptionModel.startTranscribing(locale: locale)
                 } label: {
