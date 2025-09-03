@@ -8,8 +8,6 @@ import SwiftUI
 import PhotonUtilityView
 
 struct TranscriptionTaskDetailView: View {
-    @Environment(\.copyToPasteBoard) private var copyToPasteBoard
-    
     @AppStorage(AppStorageKeys.fontSize.rawValue)
     private var fontSize: Double = TranscriptionFontStyle.defaultFontSize
     
@@ -17,8 +15,6 @@ struct TranscriptionTaskDetailView: View {
     private var lineSpacing: Double = TranscriptionFontStyle.defaultLineSpacing
     
     var task: TranscriptionTask
-    
-    @State private var copied = false
     
     var body: some View {
         VStack {
@@ -31,18 +27,7 @@ struct TranscriptionTaskDetailView: View {
                 Spacer()
                 
                 if let result = task.result, !result.isEmpty {
-                    Button {
-                        Task {
-                            await copyToPasteBoardInternal(result: result)
-                        }
-                    } label: {
-                        Image(systemName: copied ? "checkmark" : "document.on.document")
-                            .frame(minWidth: 50, minHeight: 30)
-                            .contentShape(Rectangle())
-                    }
-                    .foregroundStyle(copied ? .white : .primary)
-                    .buttonStyle(.plain)
-                    .glassEffect(.regular.tint(copied ? .accent : .clear))
+                    CopyButton(text: result)
                 }
             }
             .font(.body.bold())
@@ -67,10 +52,35 @@ struct TranscriptionTaskDetailView: View {
         }.geometryGroup()
             .frame(maxWidth: .infinity)
             .textSelection(.enabled)
-            .animation(.default, value: copied)
             .padding()
             .animation(.default, value: task.result)
             .animation(.default, value: task.status)
+    }
+}
+
+private struct CopyButton: View {
+    @Environment(\.copyToPasteBoard) private var copyToPasteBoard
+    
+    var text: String
+    
+    @State private var copied = false
+    
+    var body: some View {
+        Button {
+            if copied { return }
+            Task {
+                await copyToPasteBoardInternal(result: text)
+            }
+        } label: {
+            Image(systemName: copied ? "checkmark" : "document.on.document")
+                .frame(minWidth: 50, minHeight: 30)
+                .contentShape(Rectangle())
+                .symbolEffect(.bounce, value: copied)
+        }
+        .foregroundStyle(copied ? .white : .primary)
+        .buttonStyle(.plain)
+        .glassEffect(.regular.tint(copied ? .accent : .clear).interactive())
+        .animation(.default, value: copied)
     }
     
     private func copyToPasteBoardInternal(result: String) async {
