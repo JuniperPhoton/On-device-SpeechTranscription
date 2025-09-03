@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import Speech
+import OSLog
 
 @MainActor
 @Observable
@@ -29,6 +30,11 @@ class AppLocalesModel {
             loading = false
         }
         
+        let reservedLocale = await AssetInventory.reservedLocales
+        for locale in reservedLocale {
+            await AssetInventory.release(reservedLocale: locale)
+        }
+        
         let localeItems = await AppLocale.getSupportedLocales().map { locale in
             AppLocaleItem(locale: locale)
         }
@@ -38,6 +44,13 @@ class AppLocalesModel {
             // TODO: Try monitor the downloading status when the app re-open while the model is downloading by the
             // system in the background.
             refresh(for: item, installedLocales: installed)
+            
+            do {
+                try await AssetInventory.reserve(locale: Locale(identifier: item.locale.identifier))
+                AppLogger.defaultLogger.log("reserved locale: \(item.locale.identifier)")
+            } catch {
+                AppLogger.defaultLogger.warning("Failed to reserve locale: \(item.locale.identifier), error: \(error)")
+            }
         }
         
         self.localeItems = localeItems
