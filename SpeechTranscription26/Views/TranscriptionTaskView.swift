@@ -8,12 +8,6 @@ import SwiftUI
 import PhotonUtilityView
 
 struct TranscriptionTaskDetailView: View {
-    @AppStorage(AppStorageKeys.fontSize.rawValue)
-    private var fontSize: Double = TranscriptionFontStyle.defaultFontSize
-    
-    @AppStorage(AppStorageKeys.lineSpacing.rawValue)
-    private var lineSpacing: Double = TranscriptionFontStyle.defaultLineSpacing
-    
     var task: TranscriptionTask
     
     var body: some View {
@@ -22,7 +16,10 @@ struct TranscriptionTaskDetailView: View {
                 Text("\(task.displayName)")
                     .font(.title3.bold())
                 
-                TranscriptionTaskStatusBadge(status: task.status, including: [.failure, .inProgress, .pending, .cancelled])
+                TranscriptionTaskStatusBadge(
+                    status: task.status,
+                    including: [.failure, .inProgress, .pending, .cancelled]
+                )
                 
                 Spacer()
                 
@@ -34,18 +31,7 @@ struct TranscriptionTaskDetailView: View {
             
             if let result = task.result, !result.isEmpty {
                 Divider()
-                
-                ScrollableTextViewCompat(
-                    text: result,
-                    style: .init(
-                        fontStyle: .init(
-                            font: .messageFont(ofSize: fontSize),
-                            lineSpacing: lineSpacing
-                        ),
-                        behaviorStyle: .init(autoScrollToBottom: false)
-                    )
-                )
-                .frame(maxWidth: .infinity, alignment: .leading)
+                TranscriptionTextView(text: result)
             } else {
                 Spacer()
             }
@@ -88,5 +74,29 @@ private struct CopyButton: View {
         copied = true
         try? await Task.sleep(for: .seconds(1))
         copied = false
+    }
+}
+
+private struct TranscriptionTextView: View {
+    @AppStorage(AppStorageKeys.fontSize.rawValue)
+    private var fontSize: Double = TranscriptionFontStyle.defaultFontSize
+    
+    @AppStorage(AppStorageKeys.lineSpacing.rawValue)
+    private var lineSpacing: Double = TranscriptionFontStyle.defaultLineSpacing
+    
+    var text: String
+    
+    var body: some View {
+        ScrollableTextViewCompat(
+            text: text,
+            style: .init(
+                fontStyle: .init(
+                    font: .messageFont(ofSize: fontSize),
+                    lineSpacing: lineSpacing
+                ),
+                behaviorStyle: .init(autoScrollToBottom: false)
+            )
+        )
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

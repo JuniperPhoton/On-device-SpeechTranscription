@@ -27,7 +27,7 @@ struct TranscriptionTaskStatusBadge: View {
                 }
             }
         }.padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .frame(minHeight: 30)
             .font(.footnote.bold())
             .glassEffect(.regular.tint(status.color), in: Capsule())
     }
