@@ -8,9 +8,22 @@ import Foundation
 import UniformTypeIdentifiers
 
 extension NSItemProvider {
-    func tryLoadAsAudioFileRepresentation() async -> URL? {
+    func tryLoadingInPlaceFileRepresentation(possibleTypes: [UTType], onCompleted: @escaping (URL?) -> Void) {
+        guard let firstPossibleType = (possibleTypes.first { type in
+            self.hasRepresentationConforming(toTypeIdentifier: type.identifier)
+        }) else {
+            onCompleted(nil)
+            return
+        }
+        
+        self.loadInPlaceFileRepresentation(forTypeIdentifier: firstPossibleType.identifier) { url, success, error in
+            onCompleted(url)
+        }
+    }
+    
+    func tryLoadingInPlaceFileRepresentation(possibleTypes: [UTType]) async -> URL? {
         return await withCheckedContinuation { continuation in
-            _ = self.loadInPlaceFileRepresentation(forTypeIdentifier: UTType.audio.identifier) { url, success, error in
+            tryLoadingInPlaceFileRepresentation(possibleTypes: possibleTypes) { url in
                 continuation.resume(returning: url)
             }
         }

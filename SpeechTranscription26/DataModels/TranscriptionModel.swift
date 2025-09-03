@@ -38,10 +38,14 @@ class TranscriptionModel {
     
     func addTasks(urls: [URL]) {
         for url in urls {
-            if tasks.contains(where: { $0.file == url }) {
-                continue
+            if isFolder(url: url) {
+                let audioFiles = listAudioFilesInFolder(url: url)
+                for file in audioFiles {
+                    addTask(of: file, referencingSourceURL: url)
+                }
+            } else {
+                addTask(of: url, referencingSourceURL: url)
             }
-            tasks.append(TranscriptionTask(file: url))
         }
     }
     
@@ -61,6 +65,45 @@ class TranscriptionModel {
                 await transcribeAudioFile(locale: locale, tasks: tasks)
             }
         }
+    }
+    
+    private func addTask(of audioFile: URL, referencingSourceURL: URL) {
+        let source = TranscriptionTaskSource(referencingSourceURL: referencingSourceURL, fileURL: audioFile)
+        if tasks.contains(where: { $0.source == source }) {
+            return
+        }
+        tasks.append(TranscriptionTask(source: source))
+    }
+    
+    private func listAudioFilesInFolder(url: URL) -> [URL] {
+        _ = url.startAccessingSecurityScopedResource()
+        defer {
+            url.stopAccessingSecurityScopedResource()
+        }
+        
+        guard let contents = try? FileManager.default.contentsOfDirectory(
+            at: url,
+            includingPropertiesForKeys: [.isDirectoryKey, .typeIdentifierKey]
+        ) else {
+            return []
+        }
+        
+        let audioFiles = contents.filter { fileURL in
+            if let resourceValues = try? fileURL.resourceValues(forKeys: [.typeIdentifierKey]) {
+                if let typeIdentifier = resourceValues.typeIdentifier, let utType = UTType(typeIdentifier) {
+                    return utType.conforms(to: .audio)
+                }
+            }
+            return false
+        }
+        
+        return audioFiles
+    }
+    
+    private func isFolder(url: URL) -> Bool {
+        var isDirectory: ObjCBool = false
+        FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
+        return isDirectory.boolValue
     }
     
     private func transcribeAudioFile(locale: AppLocale, tasks: [TranscriptionTask]) async {
@@ -87,7 +130,7 @@ class TranscriptionModel {
         do {
             task.result = nil
             task.status = .inProgress
-            let results = try await self.service.transcribeStream(url: task.file, locale: locale)
+            let results = try await self.service.transcribeStream(source: task.source, locale: locale)
             
             for try await result in results {
                 if Task.isCancelled {

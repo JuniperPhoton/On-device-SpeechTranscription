@@ -47,7 +47,7 @@ struct SpeechTranscription26App: App {
             Button {
                 filePickerService.showFilePicker = true
             } label: {
-                Label("Pick Audio Files", systemImage: "document.badge.plus")
+                Label("Pick Audio Files / Folder", systemImage: "document.badge.plus")
             }
             
             Button {
