@@ -11,7 +11,7 @@ Some key features:
 - For text rendering, it uses a bridged version of `NSTextView` to achieve better performance for long text. Of course, text is selectable and copiable.
 - Font size and line spacing are adjustable via the Transcription menu.
 
-![Snipaste_2025-08-28_15-42-23](https://github.com/user-attachments/assets/5efb2c23-e966-4678-bab9-72ea50cedddd)
+![Snipaste_2025-09-03_22-19-29](https://github.com/user-attachments/assets/e4a53466-be3c-45a8-b4fc-7c96c7a2be37)
 
 # Install & Build
 
