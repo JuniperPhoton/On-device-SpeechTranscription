@@ -5,7 +5,6 @@
 //
 import SwiftUI
 import UniformTypeIdentifiers
-internal import PhotonUtility
 
 struct MainContentView: View {
     @Environment(FilePickerService.self) private var filePickerService

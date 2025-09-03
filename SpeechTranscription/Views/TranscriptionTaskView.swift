@@ -5,7 +5,6 @@
 //  Created by juniperphoton on 8/27/25.
 //
 import SwiftUI
-import PhotonUtilityView
 
 struct TranscriptionTaskDetailView: View {
     var task: TranscriptionTask
@@ -87,7 +86,7 @@ private struct TranscriptionTextView: View {
     var text: String
     
     var body: some View {
-        ScrollableTextViewCompat(
+        NSTextViewBridge(
             text: text,
             style: .init(
                 fontStyle: .init(
