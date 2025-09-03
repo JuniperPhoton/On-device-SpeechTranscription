@@ -8,6 +8,8 @@ import SwiftUI
 import PhotonUtilityView
 
 struct TranscriptionTaskDetailView: View {
+    @Environment(\.copyToPasteBoard) private var copyToPasteBoard
+    
     @AppStorage(AppStorageKeys.fontSize.rawValue)
     private var fontSize: Double = TranscriptionFontStyle.defaultFontSize
     
@@ -31,7 +33,7 @@ struct TranscriptionTaskDetailView: View {
                 if let result = task.result, !result.isEmpty {
                     Button {
                         Task {
-                            await copyToPasteBoard(result: result)
+                            await copyToPasteBoardInternal(result: result)
                         }
                     } label: {
                         Image(systemName: copied ? "checkmark" : "document.on.document")
@@ -47,7 +49,7 @@ struct TranscriptionTaskDetailView: View {
             
             if let result = task.result, !result.isEmpty {
                 Divider()
-                                
+                
                 ScrollableTextViewCompat(
                     text: result,
                     style: .init(
@@ -71,15 +73,8 @@ struct TranscriptionTaskDetailView: View {
             .animation(.default, value: task.status)
     }
     
-    private func copyToPasteBoard(result: String) async {
-#if os(iOS)
-        let pasteboard = UIPasteboard.general
-        pasteboard.string = result
-#elseif os(macOS)
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString(result, forType: .string)
-#endif
+    private func copyToPasteBoardInternal(result: String) async {
+        copyToPasteBoard(text: result)
         copied = true
         try? await Task.sleep(for: .seconds(1))
         copied = false
