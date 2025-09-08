@@ -13,14 +13,25 @@ struct MainContentView: View {
 
     @State private var selectedTaskId: String? = nil
     @State private var itemProviderLoader: NSItemProviderLoader? = nil
+    @State private var checkingStatus: AvailibilityCheckingStatus
+    @State private var columnVisibility: NavigationSplitViewVisibility
 
     @AppStorage(AppStorageKeys.locale.rawValue)
     private var locale: AppLocale = .english
     
+    init(initCheckingStatus: AvailibilityCheckingStatus) {
+        self._checkingStatus = State(initialValue: initCheckingStatus)
+        if initCheckingStatus == .checking {
+            columnVisibility = .detailOnly
+        } else {
+            columnVisibility = .all
+        }
+    }
+    
     var body: some View {
         @Bindable var service = filePickerService
         
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             SideBarView(selectedTaskId: $selectedTaskId)
                 .navigationSplitViewColumnWidth(min: 200, ideal: 250)
         } detail: {
@@ -45,8 +56,11 @@ struct MainContentView: View {
                 }
             }.navigationSplitViewColumnWidth(min: 300, ideal: 400)
         }.toolbar {
-            toolbarItems
+            if checkingStatus == .supported {
+                toolbarItems
+            }
         }.navigationTitle("Speech Transcription")
+            .toolbar(removing: checkingStatus != .supported ? ToolbarDefaultItemKind.sidebarToggle : nil)
             .onDrop(of: [.audio], isTargeted: $service.isDroppingFiles.animation(), perform: onDroppedFiles)
             .fileImporter(
                 isPresented: $service.showFilePicker,
@@ -59,6 +73,18 @@ struct MainContentView: View {
             .overlay {
                 if service.isDroppingFiles {
                     FilesDroppingHintView()
+                } else if checkingStatus == .checking {
+                    AvailabilityCheckingHintView()
+                }
+            }
+            .environment(\.avaliblityCheckingStatus, checkingStatus)
+            .task {
+                if await transcriptionModel.isAvailable {
+                    checkingStatus = .supported
+                    columnVisibility = .all
+                } else {
+                    checkingStatus = .notSupported
+                    columnVisibility = .detailOnly
                 }
             }
     }
@@ -109,8 +135,4 @@ struct MainContentView: View {
         self.itemProviderLoader = loader
         return true
     }
-}
-
-#Preview {
-    MainContentView()
 }

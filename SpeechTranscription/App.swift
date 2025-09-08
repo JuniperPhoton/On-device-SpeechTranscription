@@ -16,17 +16,12 @@ struct SpeechTranscriptionApp: App {
     private var lineSpacing: Double = TranscriptionFontStyle.defaultLineSpacing
     
     @State private var filePickerService = FilePickerService()
-    @State private var transcriptionModel = TranscriptionModel(service: TranscriptionServiceImpl())
+    @State private var transcriptionModel = TranscriptionModel(service: TranscriptionServiceBySpeech())
     @State private var localesModel = AppLocalesModel()
     
     var body: some Scene {
         WindowGroup {
-            if transcriptionModel.isAvailable {
-                MainContentView()
-            } else {
-                Text("SpeechTranscriber reports that the feature is unavailable on this device.")
-                    .frame(minWidth: 300)
-            }
+            MainContentView(initCheckingStatus: transcriptionModel.shouldCheckAvailibilityAsync ? .checking : .supported)
         }.defaultSize(width: 400, height: 300)
             .commands { commands }
             .environment(filePickerService)
