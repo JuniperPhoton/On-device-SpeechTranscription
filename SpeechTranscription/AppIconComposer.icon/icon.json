@@ -1,12 +1,14 @@
 {
-  "fill" : "system-dark",
+  "fill" : {
+    "solid" : "display-p3:0.04706,0.09020,0.11765,1.00000"
+  },
   "groups" : [
     {
       "hidden" : false,
       "layers" : [
         {
-          "image-name" : "Group.png",
-          "name" : "Group"
+          "image-name" : "Group 2.png",
+          "name" : "Group 2"
         }
       ],
       "shadow" : {
