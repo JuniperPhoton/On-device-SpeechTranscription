@@ -22,7 +22,11 @@ struct TranscriptionTaskDetailView: View {
                 
                 Spacer()
                 
-                if let result = task.result, !result.isEmpty {
+                if let result = task.result, !result.isEmpty && task.status != .inProgress {
+                    ToolbarButton(iconSystemName: "xmark") {
+                        task.clearResult()
+                    }
+                    
                     CopyButton(text: result)
                 }
             }
@@ -51,20 +55,17 @@ private struct CopyButton: View {
     @State private var copied = false
     
     var body: some View {
-        Button {
+        ToolbarButton(
+            iconSystemName: copied ? "checkmark" : "document.on.document",
+            tintColor: copied ? .accent : .clear
+        ) {
             if copied { return }
             Task {
                 await copyToPasteBoardInternal(result: text)
             }
-        } label: {
-            Image(systemName: copied ? "checkmark" : "document.on.document")
-                .frame(minWidth: 50, minHeight: 30)
-                .contentShape(Rectangle())
-                .symbolEffect(.bounce, value: copied)
         }
+        .symbolEffect(.bounce, value: copied)
         .foregroundStyle(copied ? .white : .primary)
-        .buttonStyle(.plain)
-        .glassEffect(.regular.tint(copied ? .accent : .clear).interactive())
         .animation(.default, value: copied)
     }
     
@@ -73,6 +74,27 @@ private struct CopyButton: View {
         copied = true
         try? await Task.sleep(for: .seconds(1))
         copied = false
+    }
+}
+
+private struct ToolbarButton: View {
+    var iconSystemName: String
+    var tintColor: Color?
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: iconSystemName)
+                .applyDetailViewToolbarIconStyle()
+        }.buttonStyle(.plain)
+            .glassEffect(.regular.tint(tintColor).interactive())
+    }
+}
+
+private extension View {
+    func applyDetailViewToolbarIconStyle() -> some View {
+        self.frame(minWidth: 50, minHeight: 30)
+            .contentShape(Rectangle())
     }
 }
 

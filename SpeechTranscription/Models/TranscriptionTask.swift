@@ -37,6 +37,11 @@ class TranscriptionTask: Identifiable, Hashable {
         self.result = result
     }
     
+    func clearResult() {
+        result = nil
+        status = .pending
+    }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
