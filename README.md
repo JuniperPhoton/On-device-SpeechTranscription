@@ -1,13 +1,13 @@
 # On-device Speech Transcription for macOS 26
 
-This app leverages the new `SpeechAnalyzer` API from the [Speech framework](https://developer.apple.com/documentation/speech/bringing-advanced-speech-to-text-capabilities-to-your-app?changes=_1) introduced in macOS 26 this year.
+This app leverages the new `SpeechAnalyzer` API from the [Speech framework](https://developer.apple.com/documentation/speech/bringing-advanced-speech-to-text-capabilities-to-your-app?changes=_1) introduced since macOS 26 this year.
 
 Some key features:
 
-- It uses an on-device model to do the transcription, which is provided by the macOS system.
-- You can select multiple files to transcribe them all at once.
+- It uses an on-device model to do the transcription, which is provided by the macOS system. It should respect your privacy and won't upload any text to any servers.
+- You can transcribe multiple files all at once.
 - It supports Japanese, English, Simplified Chinese, Traditional Chinese, and Cantonese out of the box. You can also modify the code to support more locales. Note that your Mac may not have downloaded some of the models, and you can manage the downloads via the SpeechTranscription26 -> Settings page.
-- It's built with SwiftUI using Liquid Glass design.
+- It's built with SwiftUI using Liquid Glass design. Dropping operation is also supported.
 - For text rendering, it uses a bridged version of `NSTextView` to achieve better performance for long text. Of course, text is selectable and copiable.
 - Font size and line spacing are adjustable via the Transcription menu.
 
@@ -30,6 +30,7 @@ Open the project with Xcode 26 Beta, and build it as usual.
 I built this mainly for my own purpose, and I have tested this on my MacBook Pro with M1 Pro on macOS 26 Beta 8. Some unknown cases:
 
 - I am not quite sure whether this on-device model requires Apple Intelligence or not. If you have tested this on a MacBook that doesn't support Apple Intelligence, please leave your feedback in the issues section.
+- You should test the accuracy on your own. In my experience, transcribing the textbook-level speech has higher accuracy, while transcribing animes may not be as good, sicne the on-device model is not trained for those materials.
 
 # MIT License
 
