@@ -9,6 +9,7 @@ import SwiftUI
 struct SideBarView: View {
     @Environment(FilePickerService.self) private var filePickerService
     @Environment(TranscriptionModel.self) private var transcriptionModel
+    @Environment(\.avaliblityCheckingStatus) private var avaliblityCheckingStatus
     
     @Binding var selectedTaskId: String?
     
@@ -44,32 +45,34 @@ struct SideBarView: View {
                 }
             }.padding([.horizontal, .bottom])
         }.safeAreaInset(edge: .top) {
-            HStack {
-                Button {
-                    filePickerService.showFilePicker = true
-                } label: {
-                    Label("Pick Audio Files / Folder", systemImage: "document.badge.plus")
-                        .foregroundStyle(transcriptionModel.tasks.isEmpty ? .white : .primary)
-                        .glassyButtonLabel(tintColor: transcriptionModel.tasks.isEmpty ? .accent : nil)
-                }
-                .buttonStyle(.plain)
-                
-                if !transcriptionModel.tasks.isEmpty {
+            if avaliblityCheckingStatus == .supported {
+                HStack {
                     Button {
-                        withAnimation {
-                            transcriptionModel.removeAll()
-                            selectedTaskId = nil
-                        }
+                        filePickerService.showFilePicker = true
                     } label: {
-                        Label("Remove all", systemImage: "trash")
-                            .labelStyle(.iconOnly)
-                            .padding(12)
-                            .contentShape(Circle())
-                            .foregroundStyle(.red)
-                            .glassEffect(.regular, in: Circle())
-                    }.buttonStyle(.plain)
-                }
-            }.buttonStyle(.glass).padding(.horizontal)
+                        Label("Pick Audio Files / Folder", systemImage: "document.badge.plus")
+                            .foregroundStyle(transcriptionModel.tasks.isEmpty ? .white : .primary)
+                            .glassyButtonLabel(tintColor: transcriptionModel.tasks.isEmpty ? .accent : nil)
+                    }
+                    .buttonStyle(.plain)
+                    
+                    if !transcriptionModel.tasks.isEmpty {
+                        Button {
+                            withAnimation {
+                                transcriptionModel.removeAll()
+                                selectedTaskId = nil
+                            }
+                        } label: {
+                            Label("Remove all", systemImage: "trash")
+                                .labelStyle(.iconOnly)
+                                .padding(12)
+                                .contentShape(Circle())
+                                .foregroundStyle(.red)
+                                .glassEffect(.regular, in: Circle())
+                        }.buttonStyle(.plain)
+                    }
+                }.buttonStyle(.glass).padding(.horizontal)
+            }
         }.animation(.default, value: transcriptionModel.tasks.count)
     }
     

@@ -17,7 +17,15 @@ class TranscriptionModel {
     private let service: any TranscriptionService
     
     var isAvailable: Bool {
-        type(of: service).isAvailable
+        get async {
+            await type(of: service).isAvailable
+        }
+    }
+    
+    var shouldCheckAvailibilityAsync: Bool {
+        get {
+            type(of: service).shouldCheckAvailibilityAsync
+        }
     }
     
     var isRunningTask: Bool {
@@ -111,11 +119,17 @@ class TranscriptionModel {
     }
     
     private func transcribeAudioFile(locale: AppLocale, tasks: [TranscriptionTask]) async {
-        await withTaskGroup { group in
-            for task in tasks {
-                _ = group.addTaskUnlessCancelled { @MainActor in
-                    await self.transcribe(task: task, locale: locale)
+        if type(of: service).supportsParallelTasks {
+            await withTaskGroup { group in
+                for task in tasks {
+                    _ = group.addTaskUnlessCancelled { @MainActor in
+                        await self.transcribe(task: task, locale: locale)
+                    }
                 }
+            }
+        } else {
+            for task in tasks {
+                await self.transcribe(task: task, locale: locale)
             }
         }
     }
@@ -134,7 +148,11 @@ class TranscriptionModel {
         do {
             task.result = nil
             task.status = .inProgress
-            let results = try await self.service.transcribeStream(source: task.source, locale: locale)
+            let results = try await self.service.transcribeStream(
+                source: task.source,
+                locale: locale,
+                options: [:]
+            )
             
             for try await result in results {
                 if Task.isCancelled {
