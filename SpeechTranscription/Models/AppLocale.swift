@@ -58,6 +58,21 @@ enum AppLocale: String, CaseIterable {
     case simplifiedChinese = "Simplified Chinese"
     case traditionalChinese = "Traditional Chinese"
     
+    nonisolated var shortIdentifier: String {
+        switch self {
+        case .cantonese:
+            "yue"
+        case .japanese:
+            "ja"
+        case .english:
+            "en"
+        case .simplifiedChinese:
+            "zh"
+        case .traditionalChinese:
+            "zh"
+        }
+    }
+    
     nonisolated var identifier: String {
         switch self {
         case .cantonese:

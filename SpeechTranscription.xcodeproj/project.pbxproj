@@ -6,11 +6,31 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		22B27F362E6FF1AA00FA5C47 /* Subprocess in Frameworks */ = {isa = PBXBuildFile; productRef = 22B27F352E6FF1AA00FA5C47 /* Subprocess */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2243A39F2E708CF800AB58E9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22DED78D2E5ED50A0082AB43 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 22DED7942E5ED50A0082AB43;
+			remoteInfo = SpeechTranscription;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		2243A39B2E708CF800AB58E9 /* SpeechTranscriptionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeechTranscriptionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		22DED7952E5ED50A0082AB43 /* SpeechTranscription.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeechTranscription.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		2243A39C2E708CF800AB58E9 /* SpeechTranscriptionTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SpeechTranscriptionTests;
+			sourceTree = "<group>";
+		};
 		22DED7972E5ED50A0082AB43 /* SpeechTranscription */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SpeechTranscription;
@@ -19,10 +39,18 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2243A3982E708CF800AB58E9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22DED7922E5ED50A0082AB43 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22B27F362E6FF1AA00FA5C47 /* Subprocess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				22DED7972E5ED50A0082AB43 /* SpeechTranscription */,
+				2243A39C2E708CF800AB58E9 /* SpeechTranscriptionTests */,
 				22DED7962E5ED50A0082AB43 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				22DED7952E5ED50A0082AB43 /* SpeechTranscription.app */,
+				2243A39B2E708CF800AB58E9 /* SpeechTranscriptionTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +78,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2243A39A2E708CF800AB58E9 /* SpeechTranscriptionTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2243A3A32E708CF800AB58E9 /* Build configuration list for PBXNativeTarget "SpeechTranscriptionTests" */;
+			buildPhases = (
+				2243A3972E708CF800AB58E9 /* Sources */,
+				2243A3982E708CF800AB58E9 /* Frameworks */,
+				2243A3992E708CF800AB58E9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2243A3A02E708CF800AB58E9 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2243A39C2E708CF800AB58E9 /* SpeechTranscriptionTests */,
+			);
+			name = SpeechTranscriptionTests;
+			packageProductDependencies = (
+			);
+			productName = SpeechTranscriptionTests;
+			productReference = 2243A39B2E708CF800AB58E9 /* SpeechTranscriptionTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		22DED7942E5ED50A0082AB43 /* SpeechTranscription */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 22DED7A02E5ED50B0082AB43 /* Build configuration list for PBXNativeTarget "SpeechTranscription" */;
@@ -65,6 +118,7 @@
 			);
 			name = SpeechTranscription;
 			packageProductDependencies = (
+				22B27F352E6FF1AA00FA5C47 /* Subprocess */,
 			);
 			productName = SpeechTranscription26;
 			productReference = 22DED7952E5ED50A0082AB43 /* SpeechTranscription.app */;
@@ -80,6 +134,10 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					2243A39A2E708CF800AB58E9 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 22DED7942E5ED50A0082AB43;
+					};
 					22DED7942E5ED50A0082AB43 = {
 						CreatedOnToolsVersion = 26.0;
 					};
@@ -95,6 +153,7 @@
 			mainGroup = 22DED78C2E5ED50A0082AB43;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				22B27F342E6FF1AA00FA5C47 /* XCRemoteSwiftPackageReference "swift-subprocess" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 22DED7962E5ED50A0082AB43 /* Products */;
@@ -102,11 +161,19 @@
 			projectRoot = "";
 			targets = (
 				22DED7942E5ED50A0082AB43 /* SpeechTranscription */,
+				2243A39A2E708CF800AB58E9 /* SpeechTranscriptionTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2243A3992E708CF800AB58E9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22DED7932E5ED50A0082AB43 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -117,6 +184,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2243A3972E708CF800AB58E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22DED7912E5ED50A0082AB43 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -126,7 +200,67 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2243A3A02E708CF800AB58E9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 22DED7942E5ED50A0082AB43 /* SpeechTranscription */;
+			targetProxy = 2243A39F2E708CF800AB58E9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		2243A3A12E708CF800AB58E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7GB9CHCB87;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.juniperphoton.SpeechTranscriptionTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpeechTranscription.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SpeechTranscription";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		2243A3A22E708CF800AB58E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7GB9CHCB87;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.juniperphoton.SpeechTranscriptionTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpeechTranscription.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SpeechTranscription";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
 		22DED79E2E5ED50B0082AB43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -360,6 +494,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2243A3A32E708CF800AB58E9 /* Build configuration list for PBXNativeTarget "SpeechTranscriptionTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2243A3A12E708CF800AB58E9 /* Debug */,
+				2243A3A22E708CF800AB58E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		22DED7902E5ED50A0082AB43 /* Build configuration list for PBXProject "SpeechTranscription" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -379,6 +522,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		22B27F342E6FF1AA00FA5C47 /* XCRemoteSwiftPackageReference "swift-subprocess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftlang/swift-subprocess.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		22B27F352E6FF1AA00FA5C47 /* Subprocess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22B27F342E6FF1AA00FA5C47 /* XCRemoteSwiftPackageReference "swift-subprocess" */;
+			productName = Subprocess;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 22DED78D2E5ED50A0082AB43 /* Project object */;
 }
